@@ -32,7 +32,7 @@ export default function RecipesFilter({ categories, currentParams }: RecipesFilt
 
   const update = useCallback(
     (updates: Record<string, string | undefined>) => {
-      const next = { ...currentParams, ...updates, page: '1' }
+      const next: Record<string, string | undefined> = { ...currentParams, ...updates, page: '1' }
       Object.keys(next).forEach((k) => {
         if (!next[k]) delete next[k]
       })
