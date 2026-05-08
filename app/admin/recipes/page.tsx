@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react'
+import { Plus, Edit, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/server'
@@ -14,7 +14,7 @@ export default async function AdminRecipesPage() {
   const supabase = await createClient()
   const { data: recipes } = await supabase
     .from('recipes')
-    .select('id, title, slug, category, published, prep_time_mins, created_at, anti_inflammatory_score')
+    .select('*')
     .order('created_at', { ascending: false })
 
   return (
