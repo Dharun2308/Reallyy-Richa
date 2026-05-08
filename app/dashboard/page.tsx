@@ -59,6 +59,7 @@ export default async function DashboardPage() {
             <h1 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal">
               Welcome back, {profile?.name?.split(' ')[0] ?? 'friend'}!
             </h1>
+            <p className="text-charcoal-muted mt-1">{user.email}</p>
           </div>
           <div className="flex gap-2">
             {profile?.role === 'admin' && (
