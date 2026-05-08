@@ -36,24 +36,31 @@ const philosophyPillars = [
 ]
 
 export default async function HomePage() {
-  const supabase = await createClient()
+  let featuredRecipes: Recipe[] | null = null
+  let featuredProtocol: Protocol | null = null
 
-  const recipesResult = await supabase
-    .from('recipes')
-    .select('*')
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-    .limit(3)
-  const featuredRecipes = recipesResult.data as Recipe[] | null
+  try {
+    const supabase = await createClient()
 
-  const protocolResult = await supabase
-    .from('protocols')
-    .select('*')
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
-  const featuredProtocol = protocolResult.data as Protocol | null
+    const recipesResult = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(3)
+    featuredRecipes = recipesResult.data as Recipe[] | null
+
+    const protocolResult = await supabase
+      .from('protocols')
+      .select('*')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+    featuredProtocol = protocolResult.data as Protocol | null
+  } catch {
+    // Supabase not configured — render page without dynamic content
+  }
 
   return (
     <>
