@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
-import { Heart, Activity, Settings, LogOut } from 'lucide-react'
+import { Heart, Activity, Settings } from 'lucide-react'
 import FadeIn from '@/components/layout/FadeIn'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -59,7 +59,6 @@ export default async function DashboardPage() {
             <h1 className="font-playfair text-3xl md:text-4xl font-bold text-charcoal">
               Welcome back, {profile?.name?.split(' ')[0] ?? 'friend'}!
             </h1>
-            <p className="text-charcoal-muted mt-1">{user.email}</p>
           </div>
           <div className="flex gap-2">
             {profile?.role === 'admin' && (
