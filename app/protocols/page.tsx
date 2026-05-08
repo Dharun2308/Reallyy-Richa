@@ -56,7 +56,7 @@ export default async function ProtocolsPage() {
               { icon: Calendar, title: 'Day-by-day guidance', body: 'Each protocol maps out exactly what to eat, do, and focus on each day.' },
               { icon: Target, title: 'Specific goals', body: 'From gut reset to energy optimisation — each protocol targets a clear outcome.' },
               { icon: Zap, title: 'Linked recipes', body: 'Every day includes curated recipes that directly support the protocol goal.' },
-            ].map((item, i) => (
+            ].map((item) => (
               <div key={item.title} className="bg-white rounded-xl p-5 shadow-sm flex gap-4">
                 <div className="p-2.5 bg-sage-50 rounded-full h-fit">
                   <item.icon className="h-5 w-5 text-sage" />
