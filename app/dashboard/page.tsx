@@ -35,14 +35,14 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('saved_at', { ascending: false })
     .limit(6)
-  const savedRecipesRaw = (savedResult.data ?? []) as { recipe_id: string; saved_at: string; recipes: Recipe | null }[]
+  const savedRecipesRaw = (savedResult.data ?? []) as unknown as { recipe_id: string; saved_at: string; recipes: Recipe | null }[]
 
   const protocolsResult = await supabase
     .from('user_protocols')
     .select('protocol_id, started_at, protocols(*)')
     .eq('user_id', user.id)
     .order('started_at', { ascending: false })
-  const activeProtocolsRaw = (protocolsResult.data ?? []) as { protocol_id: string; started_at: string; protocols: Protocol | null }[]
+  const activeProtocolsRaw = (protocolsResult.data ?? []) as unknown as { protocol_id: string; started_at: string; protocols: Protocol | null }[]
 
   const savedRecipes = savedRecipesRaw.map((sr) => sr.recipes).filter((r): r is Recipe => r !== null)
 
