@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: `Explore anti-inflammatory recipes by ${BRAND_NAME} — filtered by category, tags, prep time, and more.`,
 }
 
-interface SearchParams {
+interface SearchParams extends Record<string, string | undefined> {
   q?: string
   category?: string
   tag?: string
