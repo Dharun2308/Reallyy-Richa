@@ -17,11 +17,12 @@ export default async function AdminLayout({
 
   if (!user) redirect('/login?redirect=/admin')
 
-  const { data: profile } = await supabase
+  const profileResult = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single()
+  const profile = profileResult.data as { role: string } | null
 
   if (profile?.role !== 'admin') redirect('/?message=Access+denied.')
 
