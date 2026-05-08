@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import RecipeForm from '@/components/admin/RecipeForm'
+import type { Recipe } from '@/types/database'
 
 export const metadata: Metadata = { title: `Edit Recipe — Admin — ${BRAND_NAME}` }
 
@@ -14,7 +15,7 @@ export default async function EditRecipePage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
   const result = await supabase.from('recipes').select('*').eq('id', id).single()
-  const recipe = result.data as import('@/types/database').Recipe | null
+  const recipe = result.data as Recipe | null
 
   if (!recipe) notFound()
 

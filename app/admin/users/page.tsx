@@ -36,6 +36,7 @@ export default async function AdminUsersPage() {
                     <td className="px-4 py-3">
                       <p className="font-medium text-charcoal">{user.name ?? 'No name'}</p>
                       <p className="text-xs text-charcoal-muted sm:hidden">{user.email}</p>
+
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell text-charcoal-muted">
                       {user.email}
