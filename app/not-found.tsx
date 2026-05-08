@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Leaf } from 'lucide-react'
-import { BRAND_NAME } from '@/lib/config'
-
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-cream px-4">
@@ -13,7 +11,7 @@ export default function NotFound() {
           Page Not Found
         </h2>
         <p className="text-charcoal-muted mb-8">
-          This page doesn&apos;t exist — but there are plenty of healing recipes and protocols waiting for you.
+          This page doesn&apos;t exist &mdash; but there are plenty of healing recipes and protocols waiting for you.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/">

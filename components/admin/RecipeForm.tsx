@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -76,7 +76,6 @@ export default function RecipeForm({ recipe }: Props) {
   })
 
   const title = watch('title')
-  const slug = watch('slug')
 
   useEffect(() => {
     if (!recipe) setValue('slug', slugify(title))
