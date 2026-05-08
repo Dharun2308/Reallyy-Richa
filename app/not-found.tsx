@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Leaf } from 'lucide-react'
-import { BRAND_NAME } from '@/lib/config'
-
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-cream px-4">
