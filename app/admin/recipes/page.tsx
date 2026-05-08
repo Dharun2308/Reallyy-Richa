@@ -14,7 +14,7 @@ export default async function AdminRecipesPage() {
   const supabase = await createClient()
   const { data: recipes } = await supabase
     .from('recipes')
-    .select('id, title, slug, category, published, prep_time_mins, created_at, anti_inflammatory_score')
+    .select('*')
     .order('created_at', { ascending: false })
 
   return (

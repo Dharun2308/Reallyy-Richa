@@ -14,7 +14,7 @@ export default async function AdminProtocolsPage() {
   const supabase = await createClient()
   const { data: protocols } = await supabase
     .from('protocols')
-    .select('id, title, slug, duration, difficulty, published, created_at')
+    .select('*')
     .order('created_at', { ascending: false })
 
   return (
