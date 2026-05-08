@@ -7,15 +7,14 @@ import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import DeleteButton from '@/components/admin/DeleteButton'
 import TogglePublishButton from '@/components/admin/TogglePublishButton'
+import type { Protocol } from '@/types/database'
 
 export const metadata: Metadata = { title: `Protocols — Admin — ${BRAND_NAME}` }
 
 export default async function AdminProtocolsPage() {
   const supabase = await createClient()
-  const { data: protocols } = await supabase
-    .from('protocols')
-    .select('*')
-    .order('created_at', { ascending: false })
+  const result = await supabase.from('protocols').select('*').order('created_at', { ascending: false })
+  const protocols = result.data as Protocol[] | null
 
   return (
     <div className="space-y-6">
