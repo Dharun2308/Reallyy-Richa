@@ -13,11 +13,8 @@ interface Props {
 export default async function EditRecipePage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: recipe } = await supabase
-    .from('recipes')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const result = await supabase.from('recipes').select('*').eq('id', id).single()
+  const recipe = result.data as import('@/types/database').Recipe | null
 
   if (!recipe) notFound()
 

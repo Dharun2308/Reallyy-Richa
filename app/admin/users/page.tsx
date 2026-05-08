@@ -2,15 +2,17 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import { Badge } from '@/components/ui/badge'
+import type { Profile } from '@/types/database'
 
 export const metadata: Metadata = { title: `Users — Admin — ${BRAND_NAME}` }
 
 export default async function AdminUsersPage() {
   const supabase = await createClient()
-  const { data: users } = await supabase
+  const result = await supabase
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false })
+  const users = result.data as Profile[] | null
 
   return (
     <div className="space-y-6">

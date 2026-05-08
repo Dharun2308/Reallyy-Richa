@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME, BRAND_AUTHOR } from '@/lib/config'
+import type { Recipe, Protocol } from '@/types/database'
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} — Eat to Heal. Live to Thrive.`,
@@ -37,20 +38,22 @@ const philosophyPillars = [
 export default async function HomePage() {
   const supabase = await createClient()
 
-  const { data: featuredRecipes } = await supabase
+  const recipesResult = await supabase
     .from('recipes')
     .select('*')
     .eq('published', true)
     .order('created_at', { ascending: false })
     .limit(3)
+  const featuredRecipes = recipesResult.data as Recipe[] | null
 
-  const { data: featuredProtocol } = await supabase
+  const protocolResult = await supabase
     .from('protocols')
     .select('*')
     .eq('published', true)
     .order('created_at', { ascending: false })
     .limit(1)
     .single()
+  const featuredProtocol = protocolResult.data as Protocol | null
 
   return (
     <>

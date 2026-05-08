@@ -2,15 +2,18 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import NewsletterExport from '@/components/admin/NewsletterExport'
+import type { NewsletterSubscriber } from '@/types/database'
 
 export const metadata: Metadata = { title: `Newsletter — Admin — ${BRAND_NAME}` }
 
 export default async function AdminNewsletterPage() {
   const supabase = await createClient()
-  const { data: subscribers, count } = await supabase
+  const result = await supabase
     .from('newsletter_subscribers')
     .select('*', { count: 'exact' })
     .order('subscribed_at', { ascending: false })
+  const subscribers = result.data as NewsletterSubscriber[] | null
+  const count = result.count
 
   return (
     <div className="space-y-6">

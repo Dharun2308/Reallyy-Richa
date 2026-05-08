@@ -32,11 +32,12 @@ const FOODS_TO_AVOID = [
 
 export default async function AntiInflammatoryFoodsPage() {
   const supabase = await createClient()
-  const { data: foods } = await supabase
+  const result = await supabase
     .from('foods')
     .select('*')
     .eq('published', true)
     .order('score', { ascending: false })
+  const foods = result.data as Food[] | null
 
   const grouped = (foods ?? []).reduce<Record<string, Food[]>>((acc, food) => {
     const cat = food.category ?? 'Other'

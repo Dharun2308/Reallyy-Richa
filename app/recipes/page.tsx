@@ -6,6 +6,7 @@ import FadeIn from '@/components/layout/FadeIn'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import RecipesFilter from '@/components/recipes/RecipesFilter'
+import type { Recipe } from '@/types/database'
 
 export const metadata: Metadata = {
   title: 'Recipes',
@@ -45,13 +46,16 @@ export default async function RecipesPage({
   if (params.tag) query = query.contains('tags', [params.tag])
   if (params.max_time) query = query.lte('prep_time_mins', Number(params.max_time))
 
-  const { data: recipes, count } = await query
+  const queryResult = await query
+  const recipes = queryResult.data as Recipe[] | null
+  const count = queryResult.count
 
-  const { data: categories } = await supabase
+  const catResult = await supabase
     .from('recipes')
     .select('category')
     .eq('published', true)
     .not('category', 'is', null)
+  const categories = catResult.data as { category: string | null }[] | null
 
   const uniqueCategories = [
     ...new Set(categories?.map((r) => r.category).filter(Boolean)),

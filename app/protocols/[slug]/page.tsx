@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/server'
 import StartProtocolButton from '@/components/protocols/StartProtocolButton'
-import type { ProtocolStep } from '@/types/database'
+import type { ProtocolStep, Protocol, Recipe } from '@/types/database'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -16,11 +16,12 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data } = await supabase
+  const metaResult = await supabase
     .from('protocols')
     .select('title, summary')
     .eq('slug', slug)
     .single()
+  const data = metaResult.data as { title: string; summary: string | null } | null
   if (!data) return { title: 'Protocol not found' }
   return { title: data.title, description: data.summary ?? undefined }
 }
@@ -29,12 +30,13 @@ export default async function ProtocolPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
 
-  const { data: protocol } = await supabase
+  const protocolResult = await supabase
     .from('protocols')
     .select('*')
     .eq('slug', slug)
     .eq('published', true)
     .single()
+  const protocol = protocolResult.data as Protocol | null
 
   if (!protocol) notFound()
 
@@ -59,12 +61,14 @@ export default async function ProtocolPage({ params }: Props) {
   const linkedSlugs = steps
     .map((s) => s.linked_recipe_slug)
     .filter(Boolean) as string[]
-  const { data: linkedRecipes } = linkedSlugs.length
+  type LinkedRecipe = Pick<Recipe, 'id' | 'title' | 'slug' | 'cover_image_url' | 'prep_time_mins'>
+  const linkedResult = linkedSlugs.length
     ? await supabase
         .from('recipes')
         .select('id, title, slug, cover_image_url, prep_time_mins')
         .in('slug', linkedSlugs)
     : { data: [] }
+  const linkedRecipes = (linkedResult.data ?? []) as LinkedRecipe[]
 
   const recipeMap = Object.fromEntries(
     (linkedRecipes ?? []).map((r) => [r.slug, r])

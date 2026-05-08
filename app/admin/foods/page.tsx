@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
+import type { Food } from '@/types/database'
 import DeleteButton from '@/components/admin/DeleteButton'
 import TogglePublishButton from '@/components/admin/TogglePublishButton'
 
@@ -12,10 +13,8 @@ export const metadata: Metadata = { title: `Foods — Admin — ${BRAND_NAME}` }
 
 export default async function AdminFoodsPage() {
   const supabase = await createClient()
-  const { data: foods } = await supabase
-    .from('foods')
-    .select('*')
-    .order('created_at', { ascending: false })
+  const result = await supabase.from('foods').select('*').order('created_at', { ascending: false })
+  const foods = result.data as Food[] | null
 
   return (
     <div className="space-y-6">
