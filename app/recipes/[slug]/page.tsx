@@ -11,7 +11,7 @@ import RecipeCard from '@/components/recipes/RecipeCard'
 import SaveRecipeButton from '@/components/recipes/SaveRecipeButton'
 import { formatTime, scoreLabel } from '@/lib/utils'
 import { UNSPLASH_FOOD } from '@/lib/config'
-import type { Nutrition } from '@/types/database'
+import type { Nutrition, Recipe } from '@/types/database'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -20,11 +20,12 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
-  const { data } = await supabase
+  const metaResult = await supabase
     .from('recipes')
     .select('title, description')
     .eq('slug', slug)
     .single()
+  const data = metaResult.data as { title: string; description: string | null } | null
 
   if (!data) return { title: 'Recipe not found' }
   return {
@@ -37,12 +38,13 @@ export default async function RecipePage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
 
-  const { data: recipe } = await supabase
+  const recipeResult = await supabase
     .from('recipes')
     .select('*')
     .eq('slug', slug)
     .eq('published', true)
     .single()
+  const recipe = recipeResult.data as Recipe | null
 
   if (!recipe) notFound()
 
@@ -63,13 +65,14 @@ export default async function RecipePage({ params }: Props) {
   }
 
   // Related recipes (same category, excluding current)
-  const { data: related } = await supabase
+  const relatedResult = await supabase
     .from('recipes')
     .select('*')
     .eq('published', true)
     .eq('category', recipe.category ?? '')
     .neq('id', recipe.id)
     .limit(3)
+  const related = relatedResult.data as Recipe[] | null
 
   const score = recipe.anti_inflammatory_score
   const scoreInfo = score != null ? scoreLabel(score) : null

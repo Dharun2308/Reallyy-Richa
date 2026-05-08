@@ -22,11 +22,12 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 
 export default async function ProtocolsPage() {
   const supabase = await createClient()
-  const { data: protocols } = await supabase
+  const result = await supabase
     .from('protocols')
     .select('*')
     .eq('published', true)
     .order('created_at', { ascending: false })
+  const protocols = result.data as Protocol[] | null
 
   return (
     <div className="min-h-screen bg-cream">

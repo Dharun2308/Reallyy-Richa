@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/server'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import { BRAND_NAME, UNSPLASH_FOOD } from '@/lib/config'
 import SignOutButton from '@/components/auth/SignOutButton'
+import type { Profile, Recipe, Protocol } from '@/types/database'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -25,32 +26,29 @@ export default async function DashboardPage() {
 
   if (!user) redirect('/login?redirect=/dashboard')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  const profileResult = await supabase.from('profiles').select('*').eq('id', user.id).single()
+  const profile = profileResult.data as Profile | null
 
-  const { data: savedRecipesRaw } = await supabase
+  const savedResult = await supabase
     .from('saved_recipes')
     .select('recipe_id, saved_at, recipes(*)')
     .eq('user_id', user.id)
     .order('saved_at', { ascending: false })
     .limit(6)
+  const savedRecipesRaw = (savedResult.data ?? []) as { recipe_id: string; saved_at: string; recipes: Recipe | null }[]
 
-  const { data: activeProtocolsRaw } = await supabase
+  const protocolsResult = await supabase
     .from('user_protocols')
     .select('protocol_id, started_at, protocols(*)')
     .eq('user_id', user.id)
     .order('started_at', { ascending: false })
+  const activeProtocolsRaw = (protocolsResult.data ?? []) as { protocol_id: string; started_at: string; protocols: Protocol | null }[]
 
-  const savedRecipes = (savedRecipesRaw ?? [])
-    .map((sr) => (sr.recipes as never))
-    .filter(Boolean)
+  const savedRecipes = savedRecipesRaw.map((sr) => sr.recipes).filter((r): r is Recipe => r !== null)
 
-  const activeProtocols = (activeProtocolsRaw ?? [])
-    .map((up) => ({ protocol: up.protocols as never, startedAt: up.started_at }))
-    .filter((up) => up.protocol)
+  const activeProtocols = activeProtocolsRaw
+    .map((up) => ({ protocol: up.protocols, startedAt: up.started_at }))
+    .filter((up): up is { protocol: Protocol; startedAt: string } => up.protocol !== null)
 
   return (
     <div className="min-h-screen bg-cream">
@@ -153,8 +151,8 @@ export default async function DashboardPage() {
 
               {savedRecipes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {savedRecipes.map((recipe: never, i: number) => (
-                    <FadeIn key={(recipe as { id: string }).id} delay={i * 0.07}>
+                  {savedRecipes.map((recipe, i) => (
+                    <FadeIn key={recipe.id} delay={i * 0.07}>
                       <RecipeCard recipe={recipe} />
                     </FadeIn>
                   ))}
@@ -187,7 +185,7 @@ export default async function DashboardPage() {
 
               {activeProtocols.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {activeProtocols.map(({ protocol, startedAt }: { protocol: { id: string; title: string; slug: string; duration: string | null; goal: string | null }, startedAt: string }, i: number) => (
+                  {activeProtocols.map(({ protocol, startedAt }, i) => (
                     <FadeIn key={protocol.id} delay={i * 0.07}>
                       <Link href={`/protocols/${protocol.slug}`}>
                         <Card className="hover:shadow-md transition-shadow">
