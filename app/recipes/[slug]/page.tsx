@@ -198,9 +198,7 @@ export default async function RecipePage({ params }: Props) {
               <FadeIn delay={0.07}>
                 <div className="flex flex-wrap gap-2">
                   {recipe.tags.map((tag) => (
-                    <Link key={tag} href={`/recipes?tag=${tag}`}>
-                      <Badge variant="sage">{tag}</Badge>
-                    </Link>
+                    <Badge key={tag} variant="sage">{tag}</Badge>
                   ))}
                 </div>
               </FadeIn>
