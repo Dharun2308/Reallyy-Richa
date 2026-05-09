@@ -144,12 +144,15 @@ export default function RecipeForm({ recipe }: Props) {
           render={({ field }) => (
             <div>
               <Label>Category</Label>
-              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+              <Select
+                value={field.value || '__none__'}
+                onValueChange={(v) => field.onChange(v === '__none__' ? '' : v)}
+              >
                 <SelectTrigger className="mt-1.5">
                   <SelectValue placeholder="Select category…" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No category</SelectItem>
+                  <SelectItem value="__none__">No category</SelectItem>
                   {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
