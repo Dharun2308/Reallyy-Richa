@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Clock, Users, Leaf, ChevronLeft, Share2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { findStaticRecipe, STATIC_RECIPES } from '@/lib/static-recipes'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import FadeIn from '@/components/layout/FadeIn'
@@ -19,13 +20,21 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
-  const metaResult = await supabase
-    .from('recipes')
-    .select('title, description')
-    .eq('slug', slug)
-    .single()
-  const data = metaResult.data as { title: string; description: string | null } | null
+  let data: { title: string; description: string | null } | null = null
+  try {
+    const supabase = await createClient()
+    const metaResult = await supabase
+      .from('recipes')
+      .select('title, description')
+      .eq('slug', slug)
+      .single()
+    data = metaResult.data as { title: string; description: string | null } | null
+  } catch {}
+
+  if (!data) {
+    const stat = findStaticRecipe(slug)
+    if (stat) data = { title: stat.title, description: stat.description }
+  }
 
   if (!data) return { title: 'Recipe not found' }
   return {
@@ -36,43 +45,61 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RecipePage({ params }: Props) {
   const { slug } = await params
-  const supabase = await createClient()
 
-  const recipeResult = await supabase
-    .from('recipes')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .single()
-  const recipe = recipeResult.data as Recipe | null
+  let recipe: Recipe | null = null
+  let user: { id: string } | null = null
+  let related: Recipe[] | null = null
+
+  try {
+    const supabase = await createClient()
+    const recipeResult = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('slug', slug)
+      .eq('published', true)
+      .single()
+    recipe = recipeResult.data as Recipe | null
+
+    if (recipe) {
+      const userResult = await supabase.auth.getUser()
+      user = userResult.data.user
+
+      const relatedResult = await supabase
+        .from('recipes')
+        .select('*')
+        .eq('published', true)
+        .eq('category', recipe.category ?? '')
+        .neq('id', recipe.id)
+        .limit(3)
+      related = relatedResult.data as Recipe[] | null
+    }
+  } catch {}
+
+  if (!recipe) {
+    recipe = findStaticRecipe(slug) ?? null
+    if (recipe) {
+      related = STATIC_RECIPES.filter(
+        (r) => r.category === recipe!.category && r.slug !== recipe!.slug
+      ).slice(0, 3)
+    }
+  }
 
   if (!recipe) notFound()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
 
   // Check if saved
   let isSaved = false
   if (user) {
-    const { data: savedData } = await supabase
-      .from('saved_recipes')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('recipe_id', recipe.id)
-      .single()
-    isSaved = !!savedData
+    try {
+      const supabase = await createClient()
+      const { data: savedData } = await supabase
+        .from('saved_recipes')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('recipe_id', recipe.id)
+        .single()
+      isSaved = !!savedData
+    } catch {}
   }
-
-  // Related recipes (same category, excluding current)
-  const relatedResult = await supabase
-    .from('recipes')
-    .select('*')
-    .eq('published', true)
-    .eq('category', recipe.category ?? '')
-    .neq('id', recipe.id)
-    .limit(3)
-  const related = relatedResult.data as Recipe[] | null
 
   const score = recipe.anti_inflammatory_score
   const scoreInfo = score != null ? scoreLabel(score) : null
