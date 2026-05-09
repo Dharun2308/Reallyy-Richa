@@ -6,6 +6,7 @@ import FadeIn from '@/components/layout/FadeIn'
 import { createClient } from '@/lib/supabase/server'
 import { BRAND_NAME } from '@/lib/config'
 import RecipesFilter from '@/components/recipes/RecipesFilter'
+import { STATIC_RECIPES } from '@/lib/static-recipes'
 import type { Recipe } from '@/types/database'
 
 export const metadata: Metadata = {
@@ -68,6 +69,33 @@ export default async function RecipesPage({
   } catch {
     // Supabase not configured — render page without dynamic content
   }
+
+  // Merge static recipes with DB results (static first, dedup by slug, apply filters)
+  const dbSlugs = new Set((recipes ?? []).map((r) => r.slug))
+  let staticFiltered = STATIC_RECIPES.filter((r) => !dbSlugs.has(r.slug))
+  if (params.q) {
+    const q = params.q.toLowerCase()
+    staticFiltered = staticFiltered.filter((r) => r.title.toLowerCase().includes(q))
+  }
+  if (params.category) {
+    staticFiltered = staticFiltered.filter((r) => r.category === params.category)
+  }
+  if (params.tag) {
+    staticFiltered = staticFiltered.filter((r) => r.tags?.includes(params.tag!))
+  }
+  if (params.max_time) {
+    const max = Number(params.max_time)
+    staticFiltered = staticFiltered.filter(
+      (r) => r.prep_time_mins != null && r.prep_time_mins <= max
+    )
+  }
+
+  const merged: Recipe[] = [...staticFiltered, ...(recipes ?? [])]
+  const mergedCategories = Array.from(
+    new Set([...uniqueCategories, ...STATIC_RECIPES.map((r) => r.category).filter(Boolean) as string[]])
+  )
+  recipes = merged
+  uniqueCategories = mergedCategories
 
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
 
