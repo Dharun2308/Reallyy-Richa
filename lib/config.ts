@@ -1,5 +1,5 @@
 // Brand configuration — change BRAND_NAME to rename the site everywhere
-export const BRAND_NAME = 'Realyyy Richa'
+export const BRAND_NAME = 'Reallly Richa'
 export const BRAND_TAGLINE = 'Eat to Heal. Live to Thrive.'
 export const BRAND_DESCRIPTION =
   "Richa's science-backed approach to anti-inflammatory eating — whole foods, vibrant recipes, and practical wellness protocols."
