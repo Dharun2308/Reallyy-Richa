@@ -32,34 +32,42 @@ export default async function RecipesPage({
   const page = Math.max(1, Number(params.page ?? 1))
   const offset = (page - 1) * PAGE_SIZE
 
-  const supabase = await createClient()
+  let recipes: Recipe[] | null = null
+  let count: number | null = null
+  let uniqueCategories: string[] = []
 
-  let query = supabase
-    .from('recipes')
-    .select('*', { count: 'exact' })
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-    .range(offset, offset + PAGE_SIZE - 1)
+  try {
+    const supabase = await createClient()
 
-  if (params.q) query = query.ilike('title', `%${params.q}%`)
-  if (params.category) query = query.eq('category', params.category)
-  if (params.tag) query = query.contains('tags', [params.tag])
-  if (params.max_time) query = query.lte('prep_time_mins', Number(params.max_time))
+    let query = supabase
+      .from('recipes')
+      .select('*', { count: 'exact' })
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + PAGE_SIZE - 1)
 
-  const queryResult = await query
-  const recipes = queryResult.data as Recipe[] | null
-  const count = queryResult.count
+    if (params.q) query = query.ilike('title', `%${params.q}%`)
+    if (params.category) query = query.eq('category', params.category)
+    if (params.tag) query = query.contains('tags', [params.tag])
+    if (params.max_time) query = query.lte('prep_time_mins', Number(params.max_time))
 
-  const catResult = await supabase
-    .from('recipes')
-    .select('category')
-    .eq('published', true)
-    .not('category', 'is', null)
-  const categories = catResult.data as { category: string | null }[] | null
+    const queryResult = await query
+    recipes = queryResult.data as Recipe[] | null
+    count = queryResult.count
 
-  const uniqueCategories = [
-    ...new Set(categories?.map((r) => r.category).filter(Boolean)),
-  ] as string[]
+    const catResult = await supabase
+      .from('recipes')
+      .select('category')
+      .eq('published', true)
+      .not('category', 'is', null)
+    const categories = catResult.data as { category: string | null }[] | null
+
+    uniqueCategories = [
+      ...new Set(categories?.map((r) => r.category).filter(Boolean)),
+    ] as string[]
+  } catch {
+    // Supabase not configured — render page without dynamic content
+  }
 
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
 

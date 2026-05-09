@@ -31,13 +31,18 @@ const FOODS_TO_AVOID = [
 ]
 
 export default async function AntiInflammatoryFoodsPage() {
-  const supabase = await createClient()
-  const result = await supabase
-    .from('foods')
-    .select('*')
-    .eq('published', true)
-    .order('score', { ascending: false })
-  const foods = result.data as Food[] | null
+  let foods: Food[] | null = null
+  try {
+    const supabase = await createClient()
+    const result = await supabase
+      .from('foods')
+      .select('*')
+      .eq('published', true)
+      .order('score', { ascending: false })
+    foods = result.data as Food[] | null
+  } catch {
+    // Supabase not configured — render page without dynamic content
+  }
 
   const grouped = (foods ?? []).reduce<Record<string, Food[]>>((acc, food) => {
     const cat = food.category ?? 'Other'

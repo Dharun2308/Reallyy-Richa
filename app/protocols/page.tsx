@@ -21,13 +21,18 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 }
 
 export default async function ProtocolsPage() {
-  const supabase = await createClient()
-  const result = await supabase
-    .from('protocols')
-    .select('*')
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-  const protocols = result.data as Protocol[] | null
+  let protocols: Protocol[] | null = null
+  try {
+    const supabase = await createClient()
+    const result = await supabase
+      .from('protocols')
+      .select('*')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+    protocols = result.data as Protocol[] | null
+  } catch {
+    // Supabase not configured — render page without dynamic content
+  }
 
   return (
     <div className="min-h-screen bg-cream">
