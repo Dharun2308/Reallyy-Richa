@@ -73,10 +73,10 @@ export default function AboutPage() {
             <FadeIn direction="left" delay={0.15}>
               <div className="relative h-80 sm:h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=800&q=80"
+                  src="/about-richa.jpg"
                   alt={`${BRAND_AUTHOR} — ${BRAND_NAME}`}
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-center"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
