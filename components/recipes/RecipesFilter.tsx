@@ -14,8 +14,9 @@ import {
 import { X } from 'lucide-react'
 
 const TAGS = ['vegan', 'gluten-free', 'dairy-free', 'high-protein', 'quick']
+const ALL_VALUE = '__all__'
 const TIME_OPTIONS = [
-  { label: 'Any time', value: '' },
+  { label: 'Any time', value: ALL_VALUE },
   { label: 'Under 15 min', value: '15' },
   { label: 'Under 30 min', value: '30' },
   { label: 'Under 60 min', value: '60' },
@@ -69,14 +70,14 @@ export default function RecipesFilter({ categories, currentParams }: RecipesFilt
 
         {/* Category */}
         <Select
-          value={currentParams.category ?? ''}
-          onValueChange={(v) => update({ category: v || undefined })}
+          value={currentParams.category ?? ALL_VALUE}
+          onValueChange={(v) => update({ category: v === ALL_VALUE ? undefined : v })}
         >
           <SelectTrigger className="w-full sm:w-44 h-11" aria-label="Filter by category">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All categories</SelectItem>
+            <SelectItem value={ALL_VALUE}>All categories</SelectItem>
             {categories.map((c) => (
               <SelectItem key={c} value={c}>{c}</SelectItem>
             ))}
@@ -85,15 +86,15 @@ export default function RecipesFilter({ categories, currentParams }: RecipesFilt
 
         {/* Prep time */}
         <Select
-          value={currentParams.max_time ?? ''}
-          onValueChange={(v) => update({ max_time: v || undefined })}
+          value={currentParams.max_time ?? ALL_VALUE}
+          onValueChange={(v) => update({ max_time: v === ALL_VALUE ? undefined : v })}
         >
           <SelectTrigger className="w-full sm:w-44 h-11" aria-label="Filter by prep time">
             <SelectValue placeholder="Prep time" />
           </SelectTrigger>
           <SelectContent>
             {TIME_OPTIONS.map((o) => (
-              <SelectItem key={o.value || 'any'} value={o.value}>{o.label}</SelectItem>
+              <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
