@@ -108,34 +108,23 @@ export default async function RecipePage({ params }: Props) {
 
   return (
     <article className="min-h-screen bg-cream">
-      {/* Hero */}
-      <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px]">
-        <Image
-          src={recipe.cover_image_url ?? UNSPLASH_FOOD}
-          alt={recipe.title}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-          <div className="container-wide">
-            <Link
-              href="/recipes"
-              className="inline-flex items-center gap-1 text-white/70 hover:text-white text-sm mb-4 transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" /> All Recipes
-            </Link>
-            {recipe.category && (
-              <p className="text-sage-300 text-sm font-medium uppercase tracking-wider mb-2">
-                {recipe.category}
-              </p>
-            )}
-            <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-              {recipe.title}
-            </h1>
-          </div>
+      {/* Header */}
+      <div className="bg-white border-b border-cream-200">
+        <div className="container-wide py-6 md:py-10">
+          <Link
+            href="/recipes"
+            className="inline-flex items-center gap-1 text-charcoal-muted hover:text-charcoal text-sm mb-4 transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" /> All Recipes
+          </Link>
+          {recipe.category && (
+            <p className="text-sage text-sm font-medium uppercase tracking-wider mb-2">
+              {recipe.category}
+            </p>
+          )}
+          <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal leading-tight">
+            {recipe.title}
+          </h1>
         </div>
       </div>
 
@@ -251,6 +240,20 @@ export default async function RecipePage({ params }: Props) {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Recipe image */}
+            <FadeIn direction="left">
+              <div className="relative aspect-square rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src={recipe.cover_image_url ?? UNSPLASH_FOOD}
+                  alt={recipe.title}
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
+              </div>
+            </FadeIn>
+
             {/* Nutritional highlights */}
             {nutrition && (
               <FadeIn delay={0.2} direction="left">
