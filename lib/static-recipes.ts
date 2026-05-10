@@ -1,5 +1,7 @@
 import type { Recipe } from '@/types/database'
 
+export type RecipeWithNotes = Recipe & { notes?: string | null }
+
 const placeholder = (id: string): Recipe => ({
   author_id: null,
   created_at: '2025-01-01T00:00:00.000Z',
@@ -21,11 +23,13 @@ const placeholder = (id: string): Recipe => ({
   anti_inflammatory_score: null,
 })
 
-export const STATIC_RECIPES: Recipe[] = [
+export const STATIC_RECIPES: RecipeWithNotes[] = [
   {
     ...placeholder('static-skyr-cheesecake-bites'),
     title: 'Skyr Cheesecake Bites',
     slug: 'skyr-cheesecake-bites',
+    notes:
+      'These bites firm up dramatically once chilled — resist the urge to bake longer. Eggs at room temperature mix in without deflating the batter; cold eggs pull air down. At sea level you can skip the arrowroot, but at altitude (anywhere above ~3,000 ft) it really helps the set.',
     description:
       'High-protein mini cheesecakes with an almond flour crust and creamy Icelandic Skyr filling. Naturally sweetened and gut-friendly.',
     category: 'Dessert',
@@ -258,6 +262,6 @@ export const STATIC_RECIPES: Recipe[] = [
   },
 ]
 
-export function findStaticRecipe(slug: string): Recipe | undefined {
+export function findStaticRecipe(slug: string): RecipeWithNotes | undefined {
   return STATIC_RECIPES.find((r) => r.slug === slug)
 }
