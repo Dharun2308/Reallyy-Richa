@@ -125,23 +125,23 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
       </Button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#1c1712', color: '#e8e0d5' }}>
+        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#f5f0e8', color: '#3a2e22' }}>
 
           {/* Header */}
-          <div className="flex items-center justify-between px-5 md:px-8 py-4 border-b shrink-0" style={{ background: '#141210', borderColor: '#3a2f24' }}>
+          <div className="flex items-center justify-between px-5 md:px-8 py-4 border-b shrink-0" style={{ background: '#ede5d8', borderColor: '#d4c4a8' }}>
             <div>
-              <p className="text-xs uppercase tracking-widest font-medium" style={{ color: '#a07850' }}>
+              <p className="text-xs uppercase tracking-widest font-medium" style={{ color: '#8a6840' }}>
                 Cooking Mode
               </p>
-              <h2 className="font-playfair text-lg md:text-xl font-semibold" style={{ color: '#f0e8dc' }}>
+              <h2 className="font-playfair text-lg md:text-xl font-semibold" style={{ color: '#2e2318' }}>
                 {recipeTitle}
               </h2>
             </div>
             <button
               onClick={() => setOpen(false)}
               className="p-2 rounded-full transition-colors"
-              style={{ color: '#8a7060' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#2c2218')}
+              style={{ color: '#9a8060' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#ddd0bc')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               aria-label="Exit cooking mode"
             >
@@ -153,12 +153,12 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
           <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
 
             {/* Left — all ingredients */}
-            <aside className="lg:w-72 xl:w-80 flex flex-col border-b lg:border-b-0 lg:border-r max-h-[38vh] lg:max-h-none" style={{ background: '#161310', borderColor: '#3a2f24' }}>
+            <aside className="lg:w-72 xl:w-80 flex flex-col border-b lg:border-b-0 lg:border-r max-h-[38vh] lg:max-h-none" style={{ background: '#ede5d8', borderColor: '#d4c4a8' }}>
               <div className="px-5 pt-5 pb-2 shrink-0">
-                <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#a07850' }}>
+                <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#8a6840' }}>
                   Ingredients
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: '#6b5a48' }}>Tap to mark used</p>
+                <p className="text-xs mt-0.5" style={{ color: '#a08860' }}>Tap to mark used</p>
               </div>
               <div className="flex-1 overflow-y-auto px-4 pb-5">
                 <ul className="space-y-1 mt-2">
@@ -166,7 +166,7 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
                     if (ing.startsWith('##')) {
                       return (
                         <li key={i} className="pt-3 pb-1 first:pt-1">
-                          <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: '#7a6040' }}>
+                          <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: '#7a5c30' }}>
                             {ing.replace(/^##\s*/, '')}
                           </p>
                         </li>
@@ -179,18 +179,18 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
                           onClick={() => toggleIngredient(i)}
                           className="w-full text-left flex items-start gap-3 px-3 py-2 rounded-lg transition-colors text-sm"
                           style={isChecked
-                            ? { color: '#5a4a38', textDecoration: 'line-through' }
-                            : { color: '#d4c4b0' }
+                            ? { color: '#b0a090', textDecoration: 'line-through' }
+                            : { color: '#3a2e22' }
                           }
                         >
                           <span
                             className="mt-0.5 h-4 w-4 rounded border-2 shrink-0 flex items-center justify-center"
                             style={isChecked
-                              ? { background: '#7a5c3a', borderColor: '#7a5c3a' }
-                              : { borderColor: '#4a3a2a' }
+                              ? { background: '#8a6840', borderColor: '#8a6840' }
+                              : { borderColor: '#b0987a' }
                             }
                           >
-                            {isChecked && <Check className="h-2.5 w-2.5" style={{ color: '#f0e8dc' }} />}
+                            {isChecked && <Check className="h-2.5 w-2.5" style={{ color: '#fff' }} />}
                           </span>
                           <span>{ing}</span>
                         </button>
@@ -213,21 +213,21 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
                     onClick={() => setActiveIdx(i)}
                     className="w-full text-left rounded-2xl transition-all border"
                     style={isActive
-                      ? { background: '#2a2018', borderColor: '#7a5c3a', boxShadow: '0 4px 24px rgba(90,60,20,0.25)' }
+                      ? { background: '#fff8f0', borderColor: '#c49a60', boxShadow: '0 4px 20px rgba(160,100,40,0.12)' }
                       : isDone
-                      ? { background: '#1e1a15', borderColor: '#2e261c', opacity: 0.5 }
-                      : { background: '#1e1a15', borderColor: '#2e261c' }
+                      ? { background: '#ede5d8', borderColor: '#d4c4a8', opacity: 0.6 }
+                      : { background: '#ede5d8', borderColor: '#d4c4a8' }
                     }
                   >
-                    <div className="flex items-start gap-0 p-5">
+                    <div className="flex items-start p-5">
                       {/* Step number */}
                       <span
                         className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-0.5"
                         style={isActive
-                          ? { background: '#7a5c3a', color: '#f0e8dc' }
+                          ? { background: '#8a6840', color: '#fff' }
                           : isDone
-                          ? { background: '#3a2e22', color: '#7a6040' }
-                          : { background: '#2a2018', color: '#6b5a48' }
+                          ? { background: '#c4b090', color: '#7a6040' }
+                          : { background: '#d4c4a8', color: '#9a8060' }
                         }
                       >
                         {isDone ? <Check className="h-4 w-4" /> : i + 1}
@@ -236,26 +236,26 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
                       {/* Step text */}
                       <div
                         className="flex-1 min-w-0 leading-relaxed"
-                        style={isActive ? { color: '#f0e8dc', fontSize: '1.125rem' } : { color: '#7a6a58', fontSize: '0.9375rem' }}
+                        style={isActive ? { color: '#2e2318', fontSize: '1.125rem' } : { color: '#8a7a68', fontSize: '0.9375rem' }}
                         dangerouslySetInnerHTML={{ __html: step.html }}
                       />
 
                       {/* Per-step ingredients panel */}
                       {step.ingredients.length > 0 && (
                         <div
-                          className="shrink-0 ml-5 rounded-xl p-3 hidden md:block"
+                          className="shrink-0 ml-5 rounded-xl p-4 hidden md:block"
                           style={{
-                            width: '11rem',
-                            background: isActive ? '#231c13' : '#1a1610',
-                            border: `1px solid ${isActive ? '#4a3828' : '#2a2018'}`,
+                            width: '16rem',
+                            background: isActive ? '#f5ece0' : '#e8ddd0',
+                            border: `1px solid ${isActive ? '#c4a878' : '#c8b898'}`,
                           }}
                         >
-                          <p className="text-[10px] uppercase tracking-widest font-semibold mb-2" style={{ color: '#7a5c3a' }}>
+                          <p className="text-[10px] uppercase tracking-widest font-semibold mb-2.5" style={{ color: '#8a6840' }}>
                             This step
                           </p>
-                          <ul className="space-y-1.5">
+                          <ul className="space-y-2">
                             {step.ingredients.map((ing) => (
-                              <li key={ing} className="text-xs leading-snug" style={{ color: isActive ? '#c4a882' : '#5a4a38' }}>
+                              <li key={ing} className="text-sm leading-snug" style={{ color: isActive ? '#4a3828' : '#8a7a68' }}>
                                 {ing}
                               </li>
                             ))}
@@ -268,8 +268,8 @@ export default function CookingMode({ ingredients, instructionsHtml, recipeTitle
               })}
 
               {/* End card */}
-              <div className="rounded-2xl border px-6 py-5 text-center text-sm" style={{ background: '#1e1a15', borderColor: '#2e261c', color: '#5a4a38' }}>
-                <ChefHat className="h-6 w-6 mx-auto mb-2 opacity-30" />
+              <div className="rounded-2xl border px-6 py-5 text-center text-sm" style={{ background: '#ede5d8', borderColor: '#d4c4a8', color: '#a09080' }}>
+                <ChefHat className="h-6 w-6 mx-auto mb-2 opacity-40" />
                 All steps complete — enjoy!
               </div>
             </main>
