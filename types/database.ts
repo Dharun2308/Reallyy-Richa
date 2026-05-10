@@ -270,4 +270,17 @@ export interface Nutrition {
   protein: number
   carbs: number
   fat: number
+  // Optional extended fields for the FDA-style label.
+  saturated_fat?: number
+  trans_fat?: number
+  cholesterol_mg?: number
+  sodium_mg?: number
+  fiber?: number
+  total_sugars?: number
+  added_sugars?: number
+  vitamin_d_mcg?: number
+  calcium_mg?: number
+  iron_mg?: number
+  potassium_mg?: number
+  serving_size?: string
 }

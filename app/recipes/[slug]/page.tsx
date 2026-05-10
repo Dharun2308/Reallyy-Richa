@@ -11,6 +11,7 @@ import SaveRecipeButton from '@/components/recipes/SaveRecipeButton'
 import CookingMode from '@/components/recipes/CookingMode'
 import IngredientsBlock from '@/components/recipes/IngredientsBlock'
 import ShareButton from '@/components/recipes/ShareButton'
+import NutritionLabel from '@/components/recipes/NutritionLabel'
 import { formatTime, scoreLabel } from '@/lib/utils'
 import { UNSPLASH_FOOD } from '@/lib/config'
 import type { Nutrition, Recipe } from '@/types/database'
@@ -263,35 +264,6 @@ export default async function RecipePage({ params }: Props) {
               </div>
             </FadeIn>
 
-            {/* Nutritional highlights */}
-            {nutrition && (
-              <FadeIn delay={0.2} direction="left">
-                <div className="bg-white rounded-xl p-5 shadow-sm sticky top-24">
-                  <h3 className="font-playfair text-lg font-semibold text-charcoal mb-4">
-                    Nutritional Highlights
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { label: 'Calories', value: nutrition.calories, unit: 'kcal' },
-                      { label: 'Protein', value: nutrition.protein, unit: 'g' },
-                      { label: 'Carbs', value: nutrition.carbs, unit: 'g' },
-                      { label: 'Fat', value: nutrition.fat, unit: 'g' },
-                    ].map((item) => (
-                      <div key={item.label} className="text-center p-3 bg-cream-100 rounded-lg">
-                        <p className="text-xl font-bold text-charcoal">
-                          {item.value}
-                          <span className="text-xs font-normal text-charcoal-muted ml-0.5">
-                            {item.unit}
-                          </span>
-                        </p>
-                        <p className="text-xs text-charcoal-muted mt-0.5">{item.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </FadeIn>
-            )}
-
             {/* Anti-inflammatory callout */}
             {score != null && (
               <FadeIn delay={0.25} direction="left">
@@ -329,6 +301,13 @@ export default async function RecipePage({ params }: Props) {
                   </div>
                   <p className="text-sm text-charcoal leading-relaxed font-lora">{notes}</p>
                 </div>
+              </FadeIn>
+            )}
+
+            {/* Nutrition Facts label */}
+            {nutrition && (
+              <FadeIn delay={0.35} direction="left">
+                <NutritionLabel nutrition={nutrition} servings={recipe.servings} />
               </FadeIn>
             )}
           </div>

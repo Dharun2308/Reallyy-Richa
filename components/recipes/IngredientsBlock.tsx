@@ -51,6 +51,16 @@ export default function IngredientsBlock({ ingredients, baseServings }: Ingredie
 
       <ul className="space-y-2.5">
         {ingredients.map((raw, i) => {
+          // Lines starting with "##" are section headings
+          if (raw.startsWith('##')) {
+            return (
+              <li key={i} className="pt-3 first:pt-0">
+                <h3 className="text-xs uppercase tracking-widest font-semibold text-sage">
+                  {raw.replace(/^##\s*/, '')}
+                </h3>
+              </li>
+            )
+          }
           const scaled = scaleIngredient(raw, factor)
           const sub = findSubstitutes(raw)
           const isOpen = openSub === i
