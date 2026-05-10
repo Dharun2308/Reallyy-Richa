@@ -46,7 +46,7 @@ export default function Header({ user }: HeaderProps) {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-12 md:h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <Leaf className="h-6 w-6 text-sage group-hover:text-sage-500 transition-colors" />
