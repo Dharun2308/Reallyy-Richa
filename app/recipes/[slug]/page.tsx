@@ -12,6 +12,7 @@ import CookingMode from '@/components/recipes/CookingMode'
 import IngredientsBlock from '@/components/recipes/IngredientsBlock'
 import ShareButton from '@/components/recipes/ShareButton'
 import NutritionLabel from '@/components/recipes/NutritionLabel'
+import ScoreInfoPopover from '@/components/recipes/ScoreInfoPopover'
 import { formatTime, scoreLabel } from '@/lib/utils'
 import { UNSPLASH_FOOD } from '@/lib/config'
 import type { Nutrition, Recipe } from '@/types/database'
@@ -258,7 +259,8 @@ export default async function RecipePage({ params }: Props) {
                 <div className="bg-sage-50 border border-sage-200 rounded-xl p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <Leaf className="h-5 w-5 text-sage" />
-                    <h3 className="font-semibold text-charcoal">Anti-Inflammatory Score</h3>
+                    <h3 className="font-semibold text-charcoal flex-1">Anti-Inflammatory Score</h3>
+                    <ScoreInfoPopover />
                   </div>
                   <div className="flex items-end gap-2 mb-3">
                     <span className={`text-4xl font-bold ${scoreInfo?.color}`}>{score}</span>
