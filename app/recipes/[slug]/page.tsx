@@ -101,18 +101,13 @@ export default async function RecipePage({ params }: Props) {
     <article className="min-h-screen bg-cream">
       {/* Header */}
       <div className="bg-white border-b border-cream-200">
-        <div className="container-wide py-6 md:py-10">
+        <div className="container-wide py-4 md:py-6">
           <Link
             href="/recipes"
-            className="inline-flex items-center gap-1 text-charcoal-muted hover:text-charcoal text-sm mb-4 transition-colors"
+            className="inline-flex items-center gap-1 text-charcoal-muted hover:text-charcoal text-sm mb-3 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> All Recipes
           </Link>
-          {recipe.category && (
-            <p className="text-sage text-sm font-medium uppercase tracking-wider mb-2">
-              {recipe.category}
-            </p>
-          )}
           <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal leading-tight">
             {recipe.title}
           </h1>
