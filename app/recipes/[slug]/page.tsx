@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import FadeIn from '@/components/layout/FadeIn'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import SaveRecipeButton from '@/components/recipes/SaveRecipeButton'
+import CookingMode from '@/components/recipes/CookingMode'
 import { formatTime, scoreLabel } from '@/lib/utils'
 import { UNSPLASH_FOOD } from '@/lib/config'
 import type { Nutrition, Recipe } from '@/types/database'
@@ -227,9 +228,18 @@ export default async function RecipePage({ params }: Props) {
             {recipe.instructions && (
               <FadeIn delay={0.15}>
                 <div className="bg-white rounded-xl p-5 md:p-7 shadow-sm">
-                  <h2 className="font-playfair text-2xl font-semibold text-charcoal mb-5">
-                    Instructions
-                  </h2>
+                  <div className="flex items-start sm:items-center justify-between gap-4 mb-5 flex-col sm:flex-row">
+                    <h2 className="font-playfair text-2xl font-semibold text-charcoal">
+                      Instructions
+                    </h2>
+                    {recipe.ingredients && recipe.ingredients.length > 0 && (
+                      <CookingMode
+                        ingredients={recipe.ingredients}
+                        instructionsHtml={recipe.instructions}
+                        recipeTitle={recipe.title}
+                      />
+                    )}
+                  </div>
                   <div
                     className="prose prose-slate max-w-none prose-headings:font-playfair prose-a:text-sage"
                     dangerouslySetInnerHTML={{ __html: recipe.instructions }}
