@@ -89,6 +89,46 @@ export function scaleIngredient(text: string, factor: number): string {
   return text
 }
 
+// Scale every quantity in a string that's followed by a measurement unit.
+// Leaves time units, percentages, ratios (1:1), and bare numbers alone.
+const SCALABLE_UNITS = [
+  'tbsp', 'tablespoons', 'tablespoon',
+  'tsp', 'teaspoons', 'teaspoon',
+  'cups', 'cup',
+  'oz', 'ounces', 'ounce',
+  'fl oz',
+  'ml', 'milliliters', 'milliliter', 'millilitre',
+  'l', 'liters', 'liter', 'litre',
+  'g', 'grams', 'gram',
+  'kg', 'kilograms', 'kilogram',
+  'lb', 'lbs', 'pounds', 'pound',
+  'pinch', 'pinches',
+  'dash', 'dashes',
+  'slices', 'slice',
+  'cloves', 'clove',
+  'sprigs', 'sprig',
+  'sticks', 'stick',
+]
+const UNIT_PATTERN = SCALABLE_UNITS
+  .sort((a, b) => b.length - a.length) // longest first so "tablespoons" matches before "tbsp"
+  .map((u) => u.replace(/\s+/g, '\\s+'))
+  .join('|')
+
+// Match: <quantity><space?><unit> as a whole word, where quantity is the same set as parseQty handles.
+const SCALE_REGEX = new RegExp(
+  `(\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+(?:\\.\\d+)?[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]?|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])(\\s*)(${UNIT_PATTERN})\\b`,
+  'gi'
+)
+
+export function scaleAllQuantities(text: string, factor: number): string {
+  if (factor === 1) return text
+  return text.replace(SCALE_REGEX, (_match, qty: string, gap: string, unit: string) => {
+    const v = parseQty(qty)
+    if (v == null) return _match
+    return `${formatNumber(v * factor)}${gap || ' '}${unit}`
+  })
+}
+
 // ----- Substitutions -----
 
 export interface SubstituteEntry {
