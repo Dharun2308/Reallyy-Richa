@@ -147,15 +147,14 @@ export default async function RecipePage({ params }: Props) {
           <div className="lg:col-span-2 space-y-8">
             {/* Meta + actions */}
             <FadeIn>
-              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm flex flex-col gap-4">
-                {totalTime != null && (
-                  <div className="inline-flex items-center self-start gap-2 bg-sage-50 text-sage px-3 py-1.5 rounded-full text-sm font-semibold">
-                    <Timer className="h-4 w-4" />
-                    {formatTime(totalTime)} total
-                  </div>
-                )}
-                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-charcoal-muted">
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-charcoal-muted items-center">
+                    {totalTime != null && (
+                      <span className="inline-flex items-center gap-2 bg-sage-50 text-sage px-3 py-1.5 rounded-full text-sm font-semibold">
+                        <Timer className="h-4 w-4" />
+                        {formatTime(totalTime)} total
+                      </span>
+                    )}
                     {recipe.prep_time_mins != null && (
                       <span className="flex items-center gap-1.5">
                         <Clock className="h-4 w-4 text-sage" />
@@ -181,7 +180,7 @@ export default async function RecipePage({ params }: Props) {
                       </span>
                     )}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 shrink-0">
                     <SaveRecipeButton
                       recipeId={recipe.id}
                       initialSaved={isSaved}
@@ -189,7 +188,6 @@ export default async function RecipePage({ params }: Props) {
                     />
                     <ShareButton title={recipe.title} text={recipe.description ?? undefined} />
                   </div>
-                </div>
               </div>
             </FadeIn>
 
