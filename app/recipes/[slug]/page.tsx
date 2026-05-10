@@ -121,7 +121,7 @@ export default async function RecipePage({ params }: Props) {
         </div>
       </div>
 
-      <div className="container-wide py-8 md:py-12">
+      <div className="container-wide py-4 md:py-6">
         {/* Mobile recipe image — sits under the title */}
         <div className="lg:hidden mb-6">
           <FadeIn>
@@ -143,7 +143,7 @@ export default async function RecipePage({ params }: Props) {
           <div className="lg:col-span-2 space-y-8">
             {/* Meta + actions */}
             <FadeIn>
-              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="bg-white rounded-xl px-5 py-3 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-charcoal-muted items-center">
                     {totalTime != null && (
                       <span className="inline-flex items-center gap-2 bg-sage-50 text-sage px-3 py-1.5 rounded-full text-sm font-semibold">
