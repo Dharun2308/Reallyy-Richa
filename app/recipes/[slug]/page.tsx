@@ -115,6 +115,13 @@ export default async function RecipePage({ params }: Props) {
           <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-charcoal leading-tight">
             {recipe.title}
           </h1>
+          {recipe.tags && recipe.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {recipe.tags.map((tag) => (
+                <Badge key={tag} variant="sage">{tag}</Badge>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -192,17 +199,6 @@ export default async function RecipePage({ params }: Props) {
                 <p className="text-lg text-charcoal-muted leading-relaxed italic font-lora">
                   {recipe.description}
                 </p>
-              </FadeIn>
-            )}
-
-            {/* Tags */}
-            {recipe.tags && recipe.tags.length > 0 && (
-              <FadeIn delay={0.07}>
-                <div className="flex flex-wrap gap-2">
-                  {recipe.tags.map((tag) => (
-                    <Badge key={tag} variant="sage">{tag}</Badge>
-                  ))}
-                </div>
               </FadeIn>
             )}
 
