@@ -99,7 +99,7 @@ export default async function RootLayout({
     >
       <body className="min-h-screen flex flex-col bg-cream">
         <Header user={profile} />
-        <main className="flex-1 pt-16 md:pt-20">{children}</main>
+        <main className="flex-1 pt-12 md:pt-14">{children}</main>
         <Footer />
         <Toaster />
       </body>
