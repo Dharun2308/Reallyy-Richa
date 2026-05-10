@@ -2,15 +2,16 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Clock, Users, Leaf, ChevronLeft, Share2 } from 'lucide-react'
+import { Clock, Users, Leaf, ChevronLeft, Timer, Lightbulb } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { findStaticRecipe, STATIC_RECIPES } from '@/lib/static-recipes'
+import { findStaticRecipe, STATIC_RECIPES, type RecipeWithNotes } from '@/lib/static-recipes'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import FadeIn from '@/components/layout/FadeIn'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import SaveRecipeButton from '@/components/recipes/SaveRecipeButton'
 import CookingMode from '@/components/recipes/CookingMode'
+import IngredientsBlock from '@/components/recipes/IngredientsBlock'
+import ShareButton from '@/components/recipes/ShareButton'
 import { formatTime, scoreLabel } from '@/lib/utils'
 import { UNSPLASH_FOOD } from '@/lib/config'
 import type { Nutrition, Recipe } from '@/types/database'
@@ -105,6 +106,10 @@ export default async function RecipePage({ params }: Props) {
   const score = recipe.anti_inflammatory_score
   const scoreInfo = score != null ? scoreLabel(score) : null
   const nutrition = recipe.nutrition as Nutrition | null
+  const recipeWithNotes = recipe as RecipeWithNotes
+  const notes = recipeWithNotes.notes ?? null
+  const totalTime =
+    (recipe.prep_time_mins ?? 0) + (recipe.cook_time_mins ?? 0) || null
 
   return (
     <article className="min-h-screen bg-cream">
@@ -134,42 +139,48 @@ export default async function RecipePage({ params }: Props) {
           <div className="lg:col-span-2 space-y-8">
             {/* Meta + actions */}
             <FadeIn>
-              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <div className="flex flex-wrap gap-4 text-sm text-charcoal-muted">
-                  {recipe.prep_time_mins != null && (
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-sage" />
-                      Prep: {formatTime(recipe.prep_time_mins)}
-                    </span>
-                  )}
-                  {recipe.cook_time_mins != null && (
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-terracotta" />
-                      Cook: {formatTime(recipe.cook_time_mins)}
-                    </span>
-                  )}
-                  {recipe.servings != null && (
-                    <span className="flex items-center gap-1.5">
-                      <Users className="h-4 w-4 text-sage" />
-                      {recipe.servings} servings
-                    </span>
-                  )}
-                  {scoreInfo && (
-                    <span className={`flex items-center gap-1.5 font-medium ${scoreInfo.color}`}>
-                      <Leaf className="h-4 w-4" />
-                      AI Score: {score} — {scoreInfo.label}
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <SaveRecipeButton
-                    recipeId={recipe.id}
-                    initialSaved={isSaved}
-                    userId={user?.id}
-                  />
-                  <Button variant="ghost" size="icon" aria-label="Share recipe">
-                    <Share2 className="h-4 w-4" />
-                  </Button>
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm flex flex-col gap-4">
+                {totalTime != null && (
+                  <div className="inline-flex items-center self-start gap-2 bg-sage-50 text-sage px-3 py-1.5 rounded-full text-sm font-semibold">
+                    <Timer className="h-4 w-4" />
+                    {formatTime(totalTime)} total
+                  </div>
+                )}
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-charcoal-muted">
+                    {recipe.prep_time_mins != null && (
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4 text-sage" />
+                        Prep: {formatTime(recipe.prep_time_mins)}
+                      </span>
+                    )}
+                    {recipe.cook_time_mins != null && (
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4 text-terracotta" />
+                        Cook: {formatTime(recipe.cook_time_mins)}
+                      </span>
+                    )}
+                    {recipe.servings != null && (
+                      <span className="flex items-center gap-1.5">
+                        <Users className="h-4 w-4 text-sage" />
+                        {recipe.servings} servings
+                      </span>
+                    )}
+                    {scoreInfo && (
+                      <span className={`flex items-center gap-1.5 font-medium ${scoreInfo.color}`}>
+                        <Leaf className="h-4 w-4" />
+                        AI Score: {score} — {scoreInfo.label}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <SaveRecipeButton
+                      recipeId={recipe.id}
+                      initialSaved={isSaved}
+                      userId={user?.id}
+                    />
+                    <ShareButton title={recipe.title} text={recipe.description ?? undefined} />
+                  </div>
                 </div>
               </div>
             </FadeIn>
@@ -197,18 +208,24 @@ export default async function RecipePage({ params }: Props) {
             {/* Ingredients */}
             {recipe.ingredients && recipe.ingredients.length > 0 && (
               <FadeIn delay={0.1}>
-                <div className="bg-white rounded-xl p-5 md:p-7 shadow-sm">
-                  <h2 className="font-playfair text-2xl font-semibold text-charcoal mb-5">
-                    Ingredients
-                  </h2>
-                  <ul className="space-y-2.5">
-                    {recipe.ingredients.map((ing, i) => (
-                      <li key={i} className="flex items-start gap-3 text-charcoal">
-                        <span className="mt-1.5 h-2 w-2 rounded-full bg-sage shrink-0" />
-                        {ing}
-                      </li>
-                    ))}
-                  </ul>
+                <IngredientsBlock
+                  ingredients={recipe.ingredients}
+                  baseServings={recipe.servings}
+                />
+              </FadeIn>
+            )}
+
+            {/* Cook's Notes */}
+            {notes && (
+              <FadeIn delay={0.12}>
+                <div className="bg-sage-50 border-l-4 border-sage rounded-xl p-5 md:p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lightbulb className="h-5 w-5 text-sage" />
+                    <h3 className="font-playfair text-lg font-semibold text-charcoal">
+                      Cook&apos;s Notes
+                    </h3>
+                  </div>
+                  <p className="text-charcoal leading-relaxed font-lora">{notes}</p>
                 </div>
               </FadeIn>
             )}
@@ -230,7 +247,7 @@ export default async function RecipePage({ params }: Props) {
                     )}
                   </div>
                   <div
-                    className="prose prose-slate max-w-none prose-headings:font-playfair prose-a:text-sage"
+                    className="prose prose-slate max-w-none prose-headings:font-playfair prose-a:text-sage prose-h2:mt-8 prose-h2:mb-3 prose-h2:text-xl prose-h2:font-semibold prose-p:my-3 prose-p:leading-relaxed prose-ol:my-4 prose-ol:space-y-3 prose-ul:my-4 prose-ul:space-y-3 prose-li:leading-relaxed first:[&>h2]:mt-0"
                     dangerouslySetInnerHTML={{ __html: recipe.instructions }}
                   />
                 </div>
