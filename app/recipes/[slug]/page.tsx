@@ -199,21 +199,6 @@ export default async function RecipePage({ params }: Props) {
               </FadeIn>
             )}
 
-            {/* Cook's Notes */}
-            {notes && (
-              <FadeIn delay={0.12}>
-                <div className="bg-sage-50 border-l-4 border-sage rounded-xl p-5 md:p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="h-5 w-5 text-sage" />
-                    <h3 className="font-playfair text-lg font-semibold text-charcoal">
-                      Cook&apos;s Notes
-                    </h3>
-                  </div>
-                  <p className="text-charcoal leading-relaxed font-lora">{notes}</p>
-                </div>
-              </FadeIn>
-            )}
-
             {/* Instructions */}
             {recipe.instructions && (
               <FadeIn delay={0.15}>
@@ -305,6 +290,21 @@ export default async function RecipePage({ params }: Props) {
                   <p className="text-xs text-charcoal-muted mt-3">
                     Scored based on ingredient anti-inflammatory properties and nutrient density.
                   </p>
+                </div>
+              </FadeIn>
+            )}
+
+            {/* Cook's Notes */}
+            {notes && (
+              <FadeIn delay={0.3} direction="left">
+                <div className="bg-white border-l-4 border-sage rounded-xl p-5 shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lightbulb className="h-5 w-5 text-sage" />
+                    <h3 className="font-playfair text-lg font-semibold text-charcoal">
+                      Cook&apos;s Notes
+                    </h3>
+                  </div>
+                  <p className="text-sm text-charcoal leading-relaxed font-lora">{notes}</p>
                 </div>
               </FadeIn>
             )}
