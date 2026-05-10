@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Minus, Plus, ArrowLeftRight, X } from 'lucide-react'
-import { scaleIngredient, findSubstitutes } from '@/lib/ingredient-utils'
+import { scaleIngredient, scaleAllQuantities, findSubstitutes } from '@/lib/ingredient-utils'
 
 interface IngredientsBlockProps {
   ingredients: string[]
@@ -89,7 +89,7 @@ export default function IngredientsBlock({ ingredients, baseServings }: Ingredie
                     {sub.options.map((opt, j) => (
                       <li key={j} className="text-sm text-charcoal-muted flex gap-2">
                         <span className="text-sage shrink-0">→</span>
-                        <span>{opt}</span>
+                        <span>{scaleAllQuantities(opt, factor)}</span>
                       </li>
                     ))}
                   </ul>
