@@ -385,6 +385,57 @@ export const STATIC_RECIPES: RecipeWithNotes[] = [
   <li>Season with salt. Serve warm garnished with cilantro and a dollop of Greek yogurt.</li>
 </ol>`,
   },
+  {
+    ...placeholder('static-ninja-foodi-chicken-curry'),
+    title: 'Ninja Foodi Chicken Curry',
+    slug: 'ninja-foodi-chicken-curry',
+    description: 'A quick pressure-cooker chicken curry with coconut milk, aromatic spices, and tender chicken — ready in under 30 minutes.',
+    category: 'Dinner',
+    tags: ['gluten-free', 'dairy-free', 'high-protein'],
+    servings: 4,
+    prep_time_mins: 10,
+    cook_time_mins: 18,
+    anti_inflammatory_score: 80,
+    cover_image_url: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=80',
+    notes: 'Use your favourite curry powder or paste. I\'ve used different types over the years, pastes or spice mixes, tikka, korma, jalfrezi etc.',
+    nutrition: {
+      calories: 390,
+      fat: 22,
+      saturated_fat: 14,
+      trans_fat: 0,
+      cholesterol_mg: 95,
+      sodium_mg: 420,
+      carbs: 12,
+      fiber: 3,
+      total_sugars: 5,
+      added_sugars: 0,
+      protein: 38,
+      calcium_mg: 55,
+      iron_mg: 3.2,
+      potassium_mg: 720,
+      serving_size: '1 portion',
+    },
+    ingredients: [
+      '1 tbsp oil',
+      '1 onion, chopped',
+      '2 cloves garlic, crushed',
+      '4 chicken breasts or boneless thighs, diced',
+      '3 tbsp curry powder or paste of your choice',
+      '1 red chilli, sliced',
+      '1 x 400g tin chopped tomatoes or passata',
+      '1 tbsp tomato puree (optional)',
+      '1 x 400g tin coconut milk',
+    ],
+    instructions: `<ol>
+  <li>Switch the sauté function on and add the oil. When heated, add the chopped onions and cook for a few minutes until they begin to soften.</li>
+  <li>Add the chicken and continue to sauté until the meat is sealed. Add 2 tbsp of curry powder or paste and stir until the chicken is coated. If anything sticks, deglaze with a splash of hot water and scrape off with a wooden or silicone spatula.</li>
+  <li>Switch off the sauté function. Add the remaining curry powder or paste, sliced chilli, garlic, tomatoes (or passata), tomato puree, and just the liquid part of the coconut milk — reserve the cream.</li>
+  <li>Stir everything together, place the pressure cooker lid on, and switch the valve to seal. Set to high pressure for 8 minutes.</li>
+  <li>At the end of pressure cooking, perform a quick release by switching the valve to vent. Carefully remove the lid.</li>
+  <li>Switch back to sauté and stir in the reserved coconut cream. If the sauce is too thin, simmer until it reduces to your liking.</li>
+  <li>Optionally garnish with fresh coriander and serve with your favourite side.</li>
+</ol>`,
+  },
 ]
 
 export function findStaticRecipe(slug: string): RecipeWithNotes | undefined {
