@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Clock, Users, Leaf, ChevronLeft, Timer, Lightbulb } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { findStaticRecipe, STATIC_RECIPES, type RecipeWithNotes } from '@/lib/static-recipes'
+import { findStaticRecipe, type RecipeWithNotes } from '@/lib/static-recipes'
 import { Badge } from '@/components/ui/badge'
 import FadeIn from '@/components/layout/FadeIn'
-import RecipeCard from '@/components/recipes/RecipeCard'
 import SaveRecipeButton from '@/components/recipes/SaveRecipeButton'
 import CookingMode from '@/components/recipes/CookingMode'
 import IngredientsBlock from '@/components/recipes/IngredientsBlock'
@@ -50,7 +49,6 @@ export default async function RecipePage({ params }: Props) {
 
   let recipe: Recipe | null = null
   let user: { id: string } | null = null
-  let related: Recipe[] | null = null
 
   try {
     const supabase = await createClient()
@@ -65,25 +63,11 @@ export default async function RecipePage({ params }: Props) {
     if (recipe) {
       const userResult = await supabase.auth.getUser()
       user = userResult.data.user
-
-      const relatedResult = await supabase
-        .from('recipes')
-        .select('*')
-        .eq('published', true)
-        .eq('category', recipe.category ?? '')
-        .neq('id', recipe.id)
-        .limit(3)
-      related = relatedResult.data as Recipe[] | null
     }
   } catch {}
 
   if (!recipe) {
     recipe = findStaticRecipe(slug) ?? null
-    if (recipe) {
-      related = STATIC_RECIPES.filter(
-        (r) => r.category === recipe!.category && r.slug !== recipe!.slug
-      ).slice(0, 3)
-    }
   }
 
   if (!recipe) notFound()
@@ -326,24 +310,6 @@ export default async function RecipePage({ params }: Props) {
             )}
           </div>
         </div>
-
-        {/* Related recipes */}
-        {related && related.length > 0 && (
-          <section className="mt-16 md:mt-20">
-            <FadeIn>
-              <h2 className="font-playfair text-2xl md:text-3xl font-bold text-charcoal mb-8">
-                You Might Also Love
-              </h2>
-            </FadeIn>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {related.map((r, i) => (
-                <FadeIn key={r.id} delay={i * 0.1}>
-                  <RecipeCard recipe={r} />
-                </FadeIn>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     </article>
   )
