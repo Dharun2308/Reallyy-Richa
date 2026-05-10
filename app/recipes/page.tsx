@@ -102,7 +102,7 @@ export default async function RecipesPage({
   return (
     <div className="min-h-screen bg-cream">
       {/* Header */}
-      <div className="bg-white border-b border-cream-200 py-10 md:py-16">
+      <div className="bg-white border-b border-cream-200 py-5 md:py-7">
         <div className="container-wide">
           <FadeIn>
             <p className="text-sage text-sm font-medium uppercase tracking-widest mb-3">
