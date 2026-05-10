@@ -173,12 +173,6 @@ export default async function RecipePage({ params }: Props) {
                         {recipe.servings} servings
                       </span>
                     )}
-                    {scoreInfo && (
-                      <span className={`flex items-center gap-1.5 font-medium ${scoreInfo.color}`}>
-                        <Leaf className="h-4 w-4" />
-                        AI Score: {score} — {scoreInfo.label}
-                      </span>
-                    )}
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <SaveRecipeButton
