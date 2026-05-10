@@ -186,15 +186,6 @@ export default async function RecipePage({ params }: Props) {
               </div>
             </FadeIn>
 
-            {/* Description */}
-            {recipe.description && (
-              <FadeIn delay={0.05}>
-                <p className="text-lg text-charcoal-muted leading-relaxed italic font-lora">
-                  {recipe.description}
-                </p>
-              </FadeIn>
-            )}
-
             {/* Ingredients */}
             {recipe.ingredients && recipe.ingredients.length > 0 && (
               <FadeIn delay={0.1}>
