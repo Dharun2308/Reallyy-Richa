@@ -118,6 +118,22 @@ export default async function RecipePage({ params }: Props) {
       </div>
 
       <div className="container-wide py-8 md:py-12">
+        {/* Mobile recipe image — sits under the title */}
+        <div className="lg:hidden mb-6">
+          <FadeIn>
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-md">
+              <Image
+                src={recipe.cover_image_url ?? UNSPLASH_FOOD}
+                alt={recipe.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          </FadeIn>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-8">
@@ -216,7 +232,14 @@ export default async function RecipePage({ params }: Props) {
                     )}
                   </div>
                   <div
-                    className="prose prose-slate max-w-none prose-headings:font-playfair prose-a:text-sage prose-h2:mt-8 prose-h2:mb-3 prose-h2:text-xl prose-h2:font-semibold prose-p:my-3 prose-p:leading-relaxed prose-ol:my-4 prose-ol:space-y-3 prose-ul:my-4 prose-ul:space-y-3 prose-li:leading-relaxed first:[&>h2]:mt-0"
+                    className="text-charcoal max-w-none leading-relaxed
+                      [&>h2]:font-playfair [&>h2]:text-xl [&>h2]:font-semibold [&>h2]:mt-8 [&>h2]:mb-3 [&>h2]:first:mt-0
+                      [&>p]:my-4 [&>p]:leading-relaxed
+                      [&_strong]:font-semibold [&_strong]:text-charcoal
+                      [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:my-4 [&>ol]:space-y-3
+                      [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:my-4 [&>ul]:space-y-3
+                      [&_li]:leading-relaxed [&_li]:pl-1
+                      [&_a]:text-sage [&_a]:underline"
                     dangerouslySetInnerHTML={{ __html: recipe.instructions }}
                   />
                 </div>
@@ -226,8 +249,8 @@ export default async function RecipePage({ params }: Props) {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Recipe image */}
-            <FadeIn direction="left">
+            {/* Recipe image — desktop sidebar */}
+            <FadeIn direction="left" className="hidden lg:block">
               <div className="relative aspect-square rounded-xl overflow-hidden shadow-md">
                 <Image
                   src={recipe.cover_image_url ?? UNSPLASH_FOOD}
@@ -235,7 +258,7 @@ export default async function RecipePage({ params }: Props) {
                   fill
                   priority
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  sizes="33vw"
                 />
               </div>
             </FadeIn>
