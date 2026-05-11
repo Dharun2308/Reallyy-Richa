@@ -38,12 +38,33 @@ function parseSteps(html: string): string[] {
 
 function matchIngredients(stepText: string, ingredients: string[]): string[] {
   const lower = stepText.toLowerCase()
-  return ingredients.filter((ing) => {
-    if (ing.startsWith('##')) return false
+
+  // Build a map of section name → ingredients in that section
+  const sections: { name: string; items: string[] }[] = []
+  let current: { name: string; items: string[] } | null = null
+  for (const ing of ingredients) {
+    if (ing.startsWith('##')) {
+      current = { name: ing.replace(/^##\s*/, '').toLowerCase(), items: [] }
+      sections.push(current)
+    } else {
+      current ? current.items.push(ing) : null
+    }
+  }
+  const unsectioned = sections.length === 0 ? ingredients.filter((i) => !i.startsWith('##')) : []
+
+  // If the step mentions a section name, return all ingredients from that section
+  for (const sec of sections) {
+    const words = sec.name.split(/\s+/).filter((w) => w.length > 2)
+    if (words.some((w) => lower.includes(w))) return sec.items
+  }
+
+  // Otherwise match individual ingredients by keyword
+  const pool = unsectioned.length > 0 ? unsectioned : ingredients.filter((i) => !i.startsWith('##'))
+  return pool.filter((ing) => {
     const words = stripHtml(ing)
       .toLowerCase()
       .replace(/^\d[\d/.,½⅓¼¾⅔⅛⅜⅝⅞]*\s*/, '')
-      .replace(/^(cup|tbsp|tsp|tablespoon|teaspoon|g|kg|ml|oz|lb|pinch|handful|bunch|slice|clove|can|tin|pkg|package)s?\s+(of\s+)?/i, '')
+      .replace(/^(cup|cups|tbsp|tsp|tablespoon|teaspoon|g|kg|ml|oz|lb|pinch|handful|bunch|slice|clove|can|tin|pkg|package)s?\s+(of\s+)?/i, '')
       .split(/\s+/)
       .filter((w) => w.length > 3)
     return words.some((w) => lower.includes(w))
